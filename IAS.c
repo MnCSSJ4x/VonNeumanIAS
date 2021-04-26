@@ -69,7 +69,59 @@ void decode_execute(int IR, int MAR)
         printf("Load successful\n");
         break;
 
-        // ARITHMATIC BASED
+    //JUMP BASED
+    
+    case 0b00001101:
+        printf("JUMP to LHS M(X)");
+        left_flag=1;
+        PC[PC_index]=MainMemory[MAR];
+        break;
+    case 0b00001110:
+        printf("JUMP to RHS M(X)");
+        left_flag=0;
+        PC[PC_index]=MainMemory[MAR];
+        break;
+    
+    case 0b000011111:
+        printf("JUMP TO LHS M(X) if AC is non-negative");
+        if(ACC>0)
+        {
+            left_flag=1;
+            PC[PC_index]=MainMemory[MAR];
+        }
+        break;
+    case 0b00010000:
+        printf("JUMP to RHS M(X) if AC is non-negative");
+        if(ACC>0)
+        {
+            left_flag=0;
+            PC[PC_index]=MainMemory[MAR];
+        }
+        break;
+
+    //MODIFIED STOR
+
+    case 0b00010010:
+        printf("STOR AC value at M(X),[8:19]");
+        int lhsinst=MainMemory[MAR]>>20;
+        int leftmem=lhsinst>>12;
+        int rightmem=ACC & 00000000111111111111;
+        lhsinst=(leftmem<<12)+rightmem;
+        int rhsinst=MainMemory[MAR] & 0b0000000000000000000011111111111111111111;
+        MainMemory[MAR]=(lhsinst<<20)+rhsinst;
+        break;
+    case 0b00010011:
+        printf("STOR AC value at M(X),[28:39]");
+        int rhsinst=MainMemory[MAR] & 0b0000000000000000000011111111111111111111;
+        int leftmem=rhsinst>>12;
+        int rightmem=ACC & 00000000111111111111;
+        rhsinst=(leftmem<<12)+rightmem;
+        int lhsinst=MainMemory[MAR]>>20;
+        MainMemory[MAR]=(lhsinst<<20)+rhsinst;
+        break;
+
+
+    // ARITHMETIC BASED
 
     case 0b00000101:
         printf("Detected add M(X)\n");
@@ -106,7 +158,6 @@ void decode_execute(int IR, int MAR)
         printf("Right shift successful\n");
         break;
 
-        //JUMP BASED
     }
 }
 void PrintStatus()
