@@ -16,12 +16,17 @@ typedef struct instruction
 //Registers
 
 long long int MainMemory[MAX_SIZE];
-int PC[SIZE_PC];
-int MAR;
-int IR;
-int IBR;
+long long int PC[SIZE_PC];
+long long int MAR;
+long long int IR;
+long long int IBR;
 instruction MBR;
-int ACC;
-int MQ;
-int PC_index = 0;
-int left_flag = 0; //If we have a single instruction _> by default its right instruction so 0
+long long int ACC;
+long long int MQ;
+long long int PC_index = 0;
+long long int left_flag = 0; //If we have a single instruction _> by default its right instruction so 0
+void PrintStatus_Instruction();
+void PrintStatus_Exectuion();
+void fetch(int value_at_pc);
+void decode_execute(int IR, int MAR);
+long long int lhsinst,rhsinst,leftmem,rightmem;
