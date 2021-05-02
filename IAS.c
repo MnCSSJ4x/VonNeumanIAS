@@ -1,4 +1,4 @@
-  
+
 #include "IAS.h"
 
 void fetch(int value_at_pc)
@@ -6,12 +6,11 @@ void fetch(int value_at_pc)
     MAR = value_at_pc;
     MBR.lhs = MainMemory[MAR] >> 20; //data_
     MBR.rhs = MainMemory[MAR] & 0b0000000000000000000011111111111111111111;
-    
 
     if (left_flag == 0)
     {
-        IR=(MBR.rhs)>>12;
-        MAR=((MBR.rhs)) & 0b00000000111111111111;
+        IR = (MBR.rhs) >> 12;
+        MAR = ((MBR.rhs)) & 0b00000000111111111111;
         PrintStatus_Exectuion();
         decode_execute(IR, MAR);
         //decode on right
@@ -160,6 +159,20 @@ void decode_execute(int IR, int MAR)
         ACC = ACC >> 1;
         printf("Right shift successful\n");
         break;
+    case 0b00001011:
+        printf("Detected MUL M(x)\n");
+        MBR.data = MainMemory[MAR];
+        MQ = (ACC * MBR) << 40;
+        ACC = (ACC * MBR.data) >> 40;
+        printf("Multiplication succesful\n");
+        break;
+    case 0b00001100:
+        printf("Detected DIV M(X)\n");
+        MBR.data = MainMemory[MAR];
+        MQ = ACC / MBR.data;
+        ACC = ACC % MBR.data;
+        printf("Division successful \n");
+        break;
     }
     PrintStatus_Instruction();
 }
@@ -173,22 +186,23 @@ void PrintStatus_Exectuion()
 }
 int main()
 {
-    MainMemory[0]=0b00000001000000000100;
-    MainMemory[4]=3;
-    MainMemory[1]=0b00000101000000000101;
-    MainMemory[5]=11;
-    MainMemory[2]=0b00100001000000000110;
-    PC[0]=0;
-    PC[1]=1;
-    PC[2]=2;
-    for(PC_index=0;PC_index<=2;)
+    MainMemory[0] = 0b00000001000000000100;
+    MainMemory[4] = 3;
+    MainMemory[1] = 0b00000101000000000101;
+    MainMemory[5] = 11;
+    MainMemory[2] = 0b00100001000000000110;
+    PC[0] = 0;
+    PC[1] = 1;
+    PC[2] = 2;
+    for (PC_index = 0; PC_index <= 2;)
         fetch(PC[PC_index]);
-    printf("\n%lli",MainMemory[6]);
-
+    printf("\n%lli", MainMemory[6]);
 }
 
 //TO DO
-// LOAD and STOR works
-// arithmetic involving addition, subtraction works
+//arithmetic involving addition, subtraction works
+
+//MUL and DIV
+
 // Sample 1  - Example given in qpaper
 // Sample 2 - Factorial
