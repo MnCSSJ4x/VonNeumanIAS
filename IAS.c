@@ -76,12 +76,12 @@ void decode_execute(int IR, int MAR)
     case 0b00001101:
         printf("JUMP to LHS M(X)");
         left_flag = 1;
-        PC_index=MAR;
+        PC_index = MAR;
         break;
     case 0b00001110:
         printf("JUMP to RHS M(X)");
         left_flag = 0;
-        PC_index=MAR;
+        PC_index = MAR;
         break;
 
     case 0b000011111:
@@ -161,7 +161,7 @@ void decode_execute(int IR, int MAR)
     case 0b00001011:
         printf("Detected MUL M(x)\n");
         MBR.data = MainMemory[MAR];
-        MQ=MQ*MBR.data;
+        MQ = MQ * MBR.data;
         //MQ = (MQ * MBR.data) & 0b111111111111111111111111111111111111111111111111;
         //ACC = (ACC * MBR.data) >> 40;
         printf("Multiplication succesful\n");
@@ -178,18 +178,18 @@ void decode_execute(int IR, int MAR)
 }
 void PrintStatus_Instruction()
 {
-    printf("PC = %lld\nIR = %lld\nMAR = %lld\nIBR = %lld\nMBR = %lld\nLeft Instruction = %lld\nRight Instruction = %lld", PC_index, IR, MAR, IBR, MBR.data, MBR.lhs, MBR.rhs);
+    printf("PC = %lld\nIR = %lld\nMAR = %lld\nIBR = %lld\nMBR = %lld\nLeft Instruction = %lld\nRight Instruction = %lld\n\n", PC_index, IR, MAR, IBR, MBR.data, MBR.lhs, MBR.rhs);
 }
 void PrintStatus_Exectuion()
 {
-    printf("ACC = %lld\n MQ= %lld\n Value obtained from memory = %lld \n MBR = %lld ", ACC, MQ, MainMemory[MAR], MBR.data);
+    printf("ACC = %lld\n MQ= %lld\n Value obtained from memory = %lld \n MBR = %lld\n\n ", ACC, MQ, MainMemory[MAR], MBR.data);
 }
 void addandsub()
 {
     MainMemory[0] = 0b00000001000000000100;
     MainMemory[4] = 5;
     MainMemory[5] = 15;
-    if(MainMemory[4]==MainMemory[5])
+    if (MainMemory[4] == MainMemory[5])
         MainMemory[1] = 0b00000110000000000101;
     else
         MainMemory[1] = 0b00000101000000000101;
@@ -203,46 +203,47 @@ void addandsub()
 }
 void factorial()
 {
-    MainMemory[100]=1;
-    MainMemory[101]=5;
-    MainMemory[0]=0b00001001000001100100;
+    MainMemory[100] = 1;
+    MainMemory[101] = 5;
+    MainMemory[0] = 0b00001001000001100100;
 
     //MUL M(101)
-    MainMemory[1]=0b00001011000001100101;
+    MainMemory[1] = 0b00001011000001100101;
 
-    MainMemory[2]=0b00000001000001100101;
-    MainMemory[3]=0b00000110000001100100;
-    MainMemory[4]=0b00100001000001100101;
-    MainMemory[5]=0b00001110000000000010;
-    MainMemory[6]=0b00001010000000000000;
-    MainMemory[7]=0b00100001000001100110;
+    MainMemory[2] = 0b00000001000001100101;
+    MainMemory[3] = 0b00000110000001100100;
+    MainMemory[4] = 0b00100001000001100101;
+    MainMemory[5] = 0b00001110000000000001;
+
+    MainMemory[6] = 0b00001010000000000000;
+    MainMemory[7] = 0b00100001000001100110;
+
     //LOAD MQ M(100)
     //LOAD M(101) AC
-    
+
     //Loop
 
     //LOAD M(101)
     //SUB M(100)
     //STOR M(101)
     //JUMP Loop
-    PC[0]=0;
-    PC[1]=2;
+    PC[0] = 0;
+    PC[1] = 2;
 
-    PC[2]=1;
-    PC[3]=2;
-    PC[4]=3;
-    PC[5]=4;
-    PC[6]=5;
+    PC[2] = 1;
+    PC[3] = 2;
+    PC[4] = 3;
+    PC[5] = 4;
+    PC[6] = 5;
     for (PC_index = 0; PC_index <= 1;)
         fetch(PC[PC_index]);
-    while(ACC>=1)
+    while (ACC >= 1)
     {
         fetch(PC[PC_index]);
     }
     //LOAD MQ
     //STOR M(102)
-        printf("\n%lli", MainMemory[102]);
-
+    printf("\n%lli", MainMemory[102]);
 }
 int main()
 {
