@@ -15,7 +15,7 @@ typedef struct instruction
 
 //Registers
 
-long long int MainMemory[MAX_SIZE];
+unsigned long long int MainMemory[MAX_SIZE];
 long long int PC[SIZE_PC];
 long long int MAR;
 long long int IR;

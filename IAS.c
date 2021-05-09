@@ -4,6 +4,8 @@ void fetch(int value_at_pc)
 {
     MAR = value_at_pc;
     MBR.lhs = MainMemory[MAR] >> 20; //data_
+    if(MBR.lhs!=0)
+        left_flag=1;
     MBR.rhs = MainMemory[MAR] & 0b0000000000000000000011111111111111111111;
 
     if (left_flag == 0)
@@ -19,6 +21,11 @@ void fetch(int value_at_pc)
         IBR = MBR.rhs;
         IR = (MBR.lhs) >> 12;
         MAR = ((MBR.lhs)) & 0b00000000111111111111;
+        decode_execute(IR,MAR);
+        IR = (IBR) >> 12;
+        MAR=(IBR) & 0b00000000111111111111;
+        decode_execute(IR,MAR);
+
         //decode left
         //decode right
     }
@@ -190,13 +197,12 @@ void addandsub()
     MainMemory[4] = 5;
     MainMemory[5] = 15;
     if (MainMemory[4] == MainMemory[5])
-        MainMemory[1] = 0b00000110000000000101;
+        MainMemory[0] = (MainMemory[0]<<20)  + 0b00000110000000000101;
     else
-        MainMemory[1] = 0b00000101000000000101;
-    MainMemory[2] = 0b00100001000000000110;
+        MainMemory[0] = (MainMemory[0]<<20) + 0b00000101000000000101;
+    MainMemory[1] = 0b00100001000000000110;
     PC[0] = 0;
     PC[1] = 1;
-    PC[2] = 2;
     for (PC_index = 0; PC_index <= 2;)
         fetch(PC[PC_index]);
     printf("\nResult = %lli\n", MainMemory[6]);
@@ -205,37 +211,39 @@ void factorial()
 {
 
     MainMemory[100] = 1;
-    MainMemory[101] = 5;
+    MainMemory[101] = 4;
 
     //LOAD MQ M(100)
     MainMemory[0] = 0b00001001000001100100;
 
-    //MUL M(101)
+    //MUL M(101) and LOAD M(101)
     MainMemory[1] = 0b00001011000001100101;
 
-    //LOAD M(101)
     MainMemory[2] = 0b00000001000001100101;
 
-    //SUB M(100)
-    MainMemory[3] = 0b00000110000001100100;
+    //LOAD M(101)
+    //MainMemory[2] = 0b00000001000001100101;
+
+    //SUB M(100) and STOR M(101)
+    MainMemory[3] = 0b0000011000000110010000100001000001100101;
 
     //STOR M(101)
-    MainMemory[4] = 0b00100001000001100101;
+    //MainMemory[4] = 0b00100001000001100101;
 
     //JUMP PC=1
-    MainMemory[5] = 0b00001110000000000001;
+    MainMemory[4] = 0b00001110000000000001;
     //LOAD MQ
-    MainMemory[6] = 0b00001010000000000000;
+    MainMemory[5] = 0b0000101000000000000000100001000001100110;
 
     //STOR M(102)
-    MainMemory[7] = 0b00100001000001100110;
+    //MainMemory[7] = 0b00100001000001100110;
 
-    MainMemory[8] = 0b00001110000000000110;
+    MainMemory[6] = 0b00001101000000000101;
 
     //LOAD M(101) AC
 
     //Loop
-    PC[0] = 0;
+    /*PC[0] = 0;
     PC[1] = 2;
 
     PC[2] = 1;
@@ -247,14 +255,25 @@ void factorial()
     PC[7]=6;
     PC[8]=7;
 
-    PC[9]=8; 
+    PC[9]=8; */
+
+    PC[0]=0;
+    PC[1]=2;
+    PC[2]=1;
+    PC[3]=2;
+    PC[4]=3;
+    PC[5]=4;
+    PC[6]=5;
+    PC[7]=6;
+
     for (PC_index = 0; PC_index <= 1;)
         fetch(PC[PC_index]);
     while (ACC >= 1)
     {
         fetch(PC[PC_index]);
     }
-    fetch(PC[9]);
+
+    fetch(PC[7]);
 
     fetch(PC[PC_index]);
     fetch(PC[PC_index]);
