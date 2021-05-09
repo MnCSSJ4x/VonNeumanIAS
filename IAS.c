@@ -191,11 +191,11 @@ void PrintStatus_Exectuion()
 {
     printf("ACC = %lld\n MQ= %lld\n Value obtained from memory = %lld \n MBR = %lld\n\n ", ACC, MQ, MainMemory[MAR], MBR.data);
 }
-void addandsub()
+void addandsub(int a,int b)
 {
     MainMemory[0] = 0b00000001000000000100;
-    MainMemory[4] = 5;
-    MainMemory[5] = 15;
+    MainMemory[4] = a;
+    MainMemory[5] = b;
     if (MainMemory[4] == MainMemory[5])
         MainMemory[0] = (MainMemory[0]<<20)  + 0b00000110000000000101;
     else
@@ -207,11 +207,11 @@ void addandsub()
         fetch(PC[PC_index]);
     printf("\nResult = %lli\n", MainMemory[6]);
 }
-void factorial()
+void factorial(int a)
 {
 
     MainMemory[100] = 1;
-    MainMemory[101] = 4;
+    MainMemory[101] = a;
 
     //LOAD MQ M(100)
     MainMemory[0] = 0b00001001000001100100;
@@ -282,8 +282,34 @@ void factorial()
 }
 int main()
 {
-    //addandsub();
-    factorial();
+    printf("Welcome to our IAS machine\nInput 1 to add two numbers if they are unequal, and to subtract if they equal.\nInput 2 to compute factorial of a number.\nInput 3 to switch off the machine.\nThis program displays values in registers and instructions running during each step.\n");
+    int choice=0;
+    int a,b;
+    do
+    {
+        printf("\nEnter your choice\n");
+        scanf("%i",&choice);
+        switch(choice)
+        {
+            case 1:
+                printf("Enter two numbers.\n");
+                scanf("%i %i",&a,&b);
+                addandsub(a,b);
+                break;
+            case 2:
+                printf("Enter a number.\n");
+                scanf("%i",&a);
+                factorial(a);  
+                break;
+            case 3:
+                printf("Switching off machine.\n");
+                break;
+            default:
+                printf("Invalid input.\n");
+                break;
+        }
+    }
+    while(choice!=3);
 }
 
 //TO DO
